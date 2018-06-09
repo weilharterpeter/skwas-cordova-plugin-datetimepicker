@@ -4,7 +4,7 @@
   "description": "DateTimePicker CI tests",
   "keywords": [
     "ecosystem:cordova"
-  ]
+  ],
   "author": "skwasjer",
   "license": "MIT"
 }
