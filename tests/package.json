@@ -1,0 +1,10 @@
+{
+  "name": "skwas-cordova-plugin-datatimepicker-tests",
+  "version": "1.0.0-dev",
+  "description": "DateTimePicker CI tests",
+  "keywords": [
+    "ecosystem:cordova"
+  ]
+  "author": "skwasjer",
+  "license": "MIT"
+}

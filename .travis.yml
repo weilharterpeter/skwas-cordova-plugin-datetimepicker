@@ -1,0 +1,87 @@
+sudo: false
+addons:
+  sauce_connect:
+    username: skwasjer
+  jwt:
+    secure: l1pypSt7g1d9Mx0yMcZ8KZq7zBGWoBnZ89qg4yNgx5T5BvPL58rhDzcPschFv+jYsxEpPf5iAV6daRkAmwNfwazupaJK7z44vTjJaz30xvIXh2MyJedCMrHJ4ioCMJVYQ+XBk4VcJx9g5O6mdI+FGIrRnNTkEl6212DNDZe9XWSRKjkh7mTWdQGzLZI3Kjn0VmOjoPjgIJxS+gOvMmZ76xPKb9NLyLoI5WJKxGwRoepI4JNzbgiyksfjnwkfwyd1IukqPKfgzwl5lf5WfDHxAd/SUuM5y+htZz0s8MGPTdI/ZBp6I8X01ADpyjlGkg+qevwz9Y4dQNx1hVHnbjLC6vB0IG6JwTf/XQJkUGpIvpeXaduAbYycia4FUJ2Tl1GkOsZFBiN5qcpDGmpBjEXCOC/GHpZxpN+nwW4Cnb1Vo+0bogT0TVKd1JHFXL5nrYRxoQODYZ/Y0U8W2IUdp7pyD91eMYuYN7vGNDfrqECK9Vqng8iax5BR3PBfcGTVV4RNM9gZnN9gEE4rJTHLc+a6FsoB9OzrIuNz6o/Kur0nQu35xL5y6UnhwtuKb60owAxCp9KlWQPoEepWjGojpSKpRwnWGkL1YPFu2YXorPOo/qDIvvTCt9UlMEF3GOqz4rYRZGAW8B1/FOe9urHsncU6AZj/wvPhlV9+s5kRMnvyqss=
+env:
+  global:
+  - TRAVIS_NODE_VERSION="4.2"
+matrix:
+  include:
+  - env: PLATFORM=browser-chrome
+    os: linux
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=browser-firefox
+    os: linux
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=browser-safari
+    os: linux
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=browser-edge
+    os: linux
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=ios-9.3
+    os: osx
+    osx_image: xcode7.3
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=ios-10.0
+    os: osx
+    osx_image: xcode7.3
+    language: node_js
+    node_js: '4.2'
+  - env: PLATFORM=android-4.4
+    os: linux
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - tools
+      - build-tools-26.0.2
+  - env: PLATFORM=android-5.1
+    os: linux
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - tools
+      - build-tools-26.0.2
+  - env: PLATFORM=android-6.0
+    os: linux
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - tools
+      - build-tools-26.0.2
+  - env: PLATFORM=android-7.0
+    os: linux
+    language: android
+    jdk: oraclejdk8
+    android:
+      components:
+      - tools
+      - build-tools-26.0.2
+before_install:
+- rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm
+  && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm
+  install $TRAVIS_NODE_VERSION
+- node --version
+- if [[ "$PLATFORM" =~ android ]]; then gradle --version; fi
+- if [[ "$PLATFORM" =~ ios ]]; then npm install -g ios-deploy; fi
+- if [[ "$PLATFORM" =~ android ]]; then echo y | android update sdk -u --filter android-22,android-23,android-24,android-25,android-26;
+  fi
+- git clone https://github.com/apache/cordova-paramedic /tmp/paramedic && pushd /tmp/paramedic
+  && npm install && popd
+- npm install -g cordova
+install:
+- npm install
+script:
+# - npm test // Disable tests for now
+- node /tmp/paramedic/main.js --config pr/$PLATFORM --plugin $(pwd) --shouldUseSauce
+  --buildName travis-plugin-datetimepicker-$TRAVIS_JOB_NUMBER
