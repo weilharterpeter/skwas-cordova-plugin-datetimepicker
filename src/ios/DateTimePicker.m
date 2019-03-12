@@ -176,7 +176,6 @@
     datePicker.minuteInterval = minuteInterval;
 
     // Set to something else first, to force an update.
-    datePicker.date = [NSDate dateWithTimeIntervalSince1970:0];
     datePicker.date = [self getRoundedDate:[[NSDate alloc] initWithTimeIntervalSince1970:(ticks / DDBIntervalFactor)] minuteInterval:minuteInterval];
 }
 
